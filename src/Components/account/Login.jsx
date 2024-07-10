@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { API } from '../../service/api';
 import { DataContext } from '../../context/DataProvider';
 
-// Styled components and initial values...
+
 
 const Component = styled(Box)`
     width: 400px;
