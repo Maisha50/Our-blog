@@ -31,10 +31,6 @@ export const createNewToken = async (request, response) => {
         return response.status(401).json({ msg: 'Refresh token is missing' })
     }
 
-
-
-    
-
     const token = await Token.findOne({ token: refreshToken });
 
     if (!token) {
