@@ -30,11 +30,11 @@ const Contact = () => {
                 <Typography variant="h3">Getting in touch is easy!</Typography>    
                 <Text variant="h5">
                     Reach out to me on{' '}
-                    <Link href="https://www.instagram.com/codeforinterview/" color="inherit" target="_blank">
+                    <Link href="https://www.instagram.com/_zinnnnnku_53?igsh=MWRjNW5uMWRvYXVrZg==" color="inherit" target="_blank">
                         <Instagram />
                     </Link>
                     {' '}or send me an Email{' '}
-                    <Link href="mailto:codeforinterview@gmail.com?Subject=This%20is%20a%20subject" target="_blank" color="inherit">
+                    <Link href="mailto:adnanzihan14@gmail.com?Subject=This%20is%20a%20subject" target="_blank" color="inherit">
                         <Email />
                     </Link>.
                 </Text>

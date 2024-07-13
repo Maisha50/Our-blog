@@ -1,11 +1,10 @@
 import { Box, styled, Typography, Link } from '@mui/material';
 import { GitHub, Instagram, Email } from '@mui/icons-material';
-
 const Banner = styled(Box)`
-    background-image: url(https://www.wallpapertip.com/wmimgs/23-236943_us-wallpaper-for-website.jpg);
+    background-image: url(http://mrtaba.ir/image/bg2.jpg);
     width: 100%;
     height: 50vh;
-    background-position: left 0px bottom 0px;
+    background-position: left 0px top -100px;
     background-size: cover;
 `;
 
@@ -25,21 +24,21 @@ const About = () => {
         <Box>
             <Banner />
             <Wrapper>
-                <Typography variant="h3">Code for Interview</Typography>
+                <Typography variant="h3">BLOG NEST</Typography>
                 <Text variant="h5">
-                    I'm a Software Engineer based in India. I've built websites, desktop applications, and corporate software.<br />
-                    If you are interested, you can view some of my favorite projects here{' '}
-                    <Link href="https://github.com/kunaltyagi9" color="inherit" target="_blank">
+                Welcome to Our Blog Website – 
+                a vibrant space where stories come to life, ideas ignite, and inspiration thrives. We're passionate about creating a community where readers and writers can connect, share, and grow together.Here is our github{' '}
+                    <Link href="https://github.com/zinku053" color="inherit" target="_blank">
                         <GitHub />
                     </Link>.
                 </Text>
                 <Text variant="h5">
                     Need something built or simply want to have a chat? Reach out to me on{' '}
-                    <Link href="https://www.instagram.com/codeforinterview/" color="inherit" target="_blank">
+                    <Link href="https://www.instagram.com/_zinnnnnku_53?igsh=MWRjNW5uMWRvYXVrZg==" color="inherit" target="_blank">
                         <Instagram />
                     </Link>{' '}
                     or send me an Email{' '}
-                    <Link href="mailto:codeforinterview@gmail.com?Subject=This is a subject" target="_blank" color="inherit">
+                    <Link href="mailto:adnanzihan14@gmail.com?Subject=This is a subject" target="_blank" color="inherit">
                         <Email />
                     </Link>.
                 </Text>
