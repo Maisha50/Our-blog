@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { API } from '../../service/api';
 import { DataContext } from '../../context/DataProvider';
 
-
+// Styled components and initial values...
 
 const Component = styled(Box)`
     width: 400px;
@@ -100,8 +100,9 @@ const Login = ({ isUserAuthenticated }) => {
             if (response.isSuccess) {
                 showError('');
 
-                sessionStorage.setItem('accessToken', 'Bearer ${response.data.accessToken}');
-                sessionStorage.setItem('refreshToken', 'Bearer ${response.data.refreshToken}');
+                sessionStorage.setItem('accessToken', `Bearer ${response.data.accessToken}`);
+                sessionStorage.setItem('refreshToken', `Bearer ${response.data.refreshToken}`);
+
                 setAccount({ name: response.data.name, username: response.data.username });
 
                 isUserAuthenticated(true); // Call as a function
@@ -112,7 +113,8 @@ const Login = ({ isUserAuthenticated }) => {
             }
         } catch (error) {
             showError('Something went wrong! Please try again later.');
-            console.log(error);
+            //console.log(error);
+            console.error('Login Error:', error); 
         }
     };
 
@@ -128,6 +130,7 @@ const Login = ({ isUserAuthenticated }) => {
             }
         } catch (error) {
             showError('Something went wrong! Please try again later.');
+            console.error('Signup Error:', error);
         }
     };
 

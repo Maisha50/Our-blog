@@ -9,11 +9,23 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: "https://bloggg-neon.vercel.app", // Replace with your actual frontend URL
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true
+}));
+
+// Handle preflight requests
+app.options('*', cors());
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Routes (assuming Router is correctly defined in './routes/route.js')
+// Root route
+app.get('/', (req, res) => {
+    res.send('Server is running');
+});
+
 import Router from './routes/route.js';
 app.use('/', Router);
 
@@ -21,7 +33,6 @@ const PORT = process.env.PORT || 8000;
 const username = process.env.DB_USERNAME;
 const password = process.env.DB_PASSWORD;
 
-// Establish database connection using connectDB function
 connectDB(username, password)
   .then(() => {
     app.listen(PORT, () => {

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { API_NOTIFICATION_MESSAGES, SERVICE_URLS } from '../constants/config';
 import { getAccessToken, getType } from '../utils/common-utils';
 
-const API_URL = 'http://localhost:8000';
+const API_URL = 'https://backend-kappa-liart.vercel.app/';
 
 const axiosInstance = axios.create({
     baseURL: API_URL,
@@ -15,7 +15,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
     function(config) {
         if (config.TYPE.params) {
-            config.params = config.TYPE.params
+            config.params = config.TYPE.params;
         } else if (config.TYPE.query) {
             config.url = config.url + '/' + config.TYPE.query;
         }
@@ -28,18 +28,12 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
     function(response) {
-        // Stop global loader here
         return processResponse(response);
     },
     function(error) {
-        // Stop global loader here
         return Promise.reject(ProcessError(error));
     }
 );
-
-///////////////////////////////
-// Process Axios Response
-///////////////////////////////
 
 const processResponse = (response) => {
     if (response.status === 200 || response.status === 201) {
@@ -54,17 +48,24 @@ const processResponse = (response) => {
     }
 };
 
-///////////////////////////////
-// Process Axios Error
-///////////////////////////////
-
 const ProcessError = async (error) => {
     if (error.response) {
-        // Server responded with a non-2xx status code
-        if (error.response.status === 403) {
-            // Clear sessionStorage on 403 error
+        if (error.response.status === 401) {
+            // Unauthorized access handling (e.g., clear session)
             sessionStorage.clear();
+            console.log("Unauthorized access detected. Session cleared.");
+            return {
+                isError: true,
+                msg: "Unauthorized: Please log in again.",
+                code: 401
+            };
+        } else if (error.response.status === 403) {
+            // Handle other specific status codes as needed
+            console.log("Forbidden: ", error.response.data?.message);
+        } else {
+            console.log("Error Response Status: ", error.response.status);
         }
+
         console.log("ERROR IN RESPONSE: ", error.toJSON());
         return {
             isError: true,
@@ -72,7 +73,6 @@ const ProcessError = async (error) => {
             code: error.response.status
         };
     } else if (error.request) {
-        // Request made but no response received
         console.log("ERROR IN REQUEST: ", error.toJSON());
         return {
             isError: true,
@@ -80,7 +80,6 @@ const ProcessError = async (error) => {
             code: ""
         };
     } else {
-        // Something happened in setting up the request that triggered an Error
         console.log("ERROR: ", error.toJSON());
         return {
             isError: true,
@@ -90,36 +89,45 @@ const ProcessError = async (error) => {
     }
 };
 
-///////////////////////////////
-// API Object with Service URLs
-///////////////////////////////
-
 const API = {};
 
 for (const [key, value] of Object.entries(SERVICE_URLS)) {
-    API[key] = (body, showUploadProgress, showDownloadProgress) =>
-        axiosInstance({
+    API[key] = (body, showUploadProgress, showDownloadProgress) => {
+        const requestData = {
             method: value.method,
             url: value.url,
-            data: value.method === 'DELETE' ? '' : body,
             responseType: value.responseType,
             headers: {
                 authorization: getAccessToken(),
             },
             TYPE: getType(value, body),
-            onUploadProgress: function(progressEvent) {
-                if (showUploadProgress) {
-                    let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-                    showUploadProgress(percentCompleted);
-                }
-            },
-            onDownloadProgress: function(progressEvent) {
-                if (showDownloadProgress) {
-                    let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-                    showDownloadProgress(percentCompleted);
-                }
-            }
-        });
+        };
+
+        // Handle data payload for DELETE requests
+        if (value.method === 'DELETE') {
+            requestData.data = undefined; // No data payload for DELETE requests
+        } else {
+            requestData.data = body;
+        }
+
+        // Handle upload and download progress if provided
+        if (showUploadProgress) {
+            requestData.onUploadProgress = function(progressEvent) {
+                let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                showUploadProgress(percentCompleted);
+            };
+        }
+
+        if (showDownloadProgress) {
+            requestData.onDownloadProgress = function(progressEvent) {
+                let percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                showDownloadProgress(percentCompleted);
+            };
+        }
+
+        return axiosInstance(requestData);
+    };
 }
+
 
 export { API };
