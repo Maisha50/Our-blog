@@ -22,29 +22,7 @@ const Text = styled(Typography)`
 
 const About = () => {
     return (
-        <Box>
-            <Banner />
-            <Wrapper>
-                <Typography variant="h3">Code for Interview</Typography>
-                <Text variant="h5">
-                    I'm a Software Engineer based in India. I've built websites, desktop applications, and corporate software.<br />
-                    If you are interested, you can view some of my favorite projects here{' '}
-                    <Link href="https://github.com/kunaltyagi9" color="inherit" target="_blank">
-                        <GitHub />
-                    </Link>.
-                </Text>
-                <Text variant="h5">
-                    Need something built or simply want to have a chat? Reach out to me on{' '}
-                    <Link href="https://www.instagram.com/codeforinterview/" color="inherit" target="_blank">
-                        <Instagram />
-                    </Link>{' '}
-                    or send me an Email{' '}
-                    <Link href="mailto:codeforinterview@gmail.com?Subject=This is a subject" target="_blank" color="inherit">
-                        <Email />
-                    </Link>.
-                </Text>
-            </Wrapper>
-        </Box>
+        <div>About Page</div>
     );
 };
 
