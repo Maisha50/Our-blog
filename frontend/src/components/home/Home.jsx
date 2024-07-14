@@ -9,7 +9,7 @@ import Categories from '../home/categories';
 const Home = () => {
     return (
         <>
-            <Banner />
+            {/* <Banner /> */}
             <Grid container spacing={2}>
                 <Grid item lg={2} xs={12} sm={2}>
                     <Categories />
