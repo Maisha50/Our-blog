@@ -1,10 +1,15 @@
 import { useState, useEffect, useContext } from 'react';
+
 import { Box, Typography, styled } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import { API } from '../../service/api';
+
 import { DataContext } from '../../context/DataProvider';
+
+// components
+import Comments from './comments/Comments';
 
 const Container = styled(Box)(({ theme }) => ({
     margin: '50px 100px',
@@ -54,35 +59,24 @@ const DetailView = () => {
     
     const [post, setPost] = useState({});
     const { account } = useContext(DataContext);
+
     const navigate = useNavigate();
     const { id } = useParams();
-
+    
     useEffect(() => {
-        if (id) {
-            const fetchData = async () => {
-                try {
-                    const response = await API.getPostById(id);
-                    if (response.isSuccess) {
-                        setPost(response.data);
-                    } else {
-                        console.error('Failed to fetch post data:', response.error);
-                    }
-                } catch (error) {
-                    console.error('Error fetching post data:', error);
-                }
-            };
-            fetchData();
+        const fetchData = async () => {
+            let response = await API.getPostById(id);
+            if (response.isSuccess) {
+                setPost(response.data);
+            }
         }
-    }, [id]);
+        fetchData();
+    }, []);
 
     const deleteBlog = async () => {  
-        try {
-            await API.deletePost(post._id);
-            navigate('/');
-        } catch (error) {
-            console.error('Error deleting post:', error);
-        }
-    };
+        await API.deletePost(post._id);
+        navigate('/')
+    }
 
     return (
         <Container>
@@ -106,8 +100,9 @@ const DetailView = () => {
             </Author>
 
             <Typography>{post.description}</Typography>
+            <Comments post={post} />
         </Container>
-    );
-};
+    )
+}
 
 export default DetailView;

@@ -7,9 +7,15 @@ import { connectDB } from './database/db.js'; // Importing named export connectD
 dotenv.config();
 
 const app = express();
+// Middleware
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Routes (assuming Router is correctly defined in './routes/route.js')
 
 // Middleware
-app.use(cors({
+/*app.use(cors({
   origin: "https://bloggg-neon.vercel.app", // Replace with your actual frontend URL
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true
@@ -24,7 +30,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Root route
 app.get('/', (req, res) => {
     res.send('Server is running');
-});
+});*/
 
 import Router from './routes/route.js';
 app.use('/', Router);
