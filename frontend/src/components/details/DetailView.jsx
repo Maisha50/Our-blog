@@ -11,7 +11,6 @@ import { DataContext } from '../../context/DataProvider';
 // components
 import Comments from './comments/Comments';
 
-
 const Container = styled(Box)(({ theme }) => ({
     margin: '50px 100px',
     [theme.breakpoints.down('md')]: {
