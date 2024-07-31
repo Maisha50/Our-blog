@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+
 import { Box, styled, TextareaAutosize, Button, FormControl, InputBase } from '@mui/material';
 import { AddCircle as Add } from '@mui/icons-material';
 import { useNavigate, useParams } from 'react-router-dom';
+
 import { API } from '../../service/api';
 
 const Container = styled(Box)(({ theme }) => ({
@@ -50,26 +52,24 @@ const initialPost = {
 
 const Update = () => {
     const navigate = useNavigate();
+
     const [post, setPost] = useState(initialPost);
     const [file, setFile] = useState('');
-    const { id } = useParams();
-    const url = 'https://images.unsplash.com/photo-1543128639-4cb7e6eeef1b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFwdG9wJTIwc2V0dXB8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80';
+    const [imageURL, setImageURL] = useState('');
 
+    const { id } = useParams();
+
+    const url = 'https://images.unsplash.com/photo-1543128639-4cb7e6eeef1b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFwdG9wJTIwc2V0dXB8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80';
+    
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                const response = await API.getPostById(id);
-                if (response.isSuccess) {
-                    setPost(response.data);
-                } else {
-                    console.error('Failed to fetch post data:', response.errorMessage);
-                }
-            } catch (error) {
-                console.error('Error fetching post:', error);
+            let response = await API.getPostById(id);
+            if (response.isSuccess) {
+                setPost(response.data);
             }
         }
         fetchData();
-    }, [id]);
+    }, []);
 
     useEffect(() => {
         const getImage = async () => { 
@@ -78,31 +78,19 @@ const Update = () => {
                 data.append("name", file.name);
                 data.append("file", file);
                 
-                try {
-                    const response = await API.uploadFile(data);
-                    if (response.isSuccess) {
-                        setPost(prevPost => ({
-                            ...prevPost,
-                            picture: response.data
-                        }));
-                    } else {
-                        console.error('Failed to upload file:', response.errorMessage);
-                    }
-                } catch (error) {
-                    console.error('Error uploading file:', error);
+                const response = await API.uploadFile(data);
+                if (response.isSuccess) {
+                    post.picture = response.data;
+                    setImageURL(response.data);    
                 }
             }
         }
         getImage();
-    }, [file]);
+    }, [file])
 
     const updateBlogPost = async () => {
-        try {
-            await API.updatePostById(id, post); // Assuming this is the correct method for updating a post by ID
-            navigate(`/details/${id}`);
-        } catch (error) {
-            console.error('Error updating post:', error);
-        }
+        await API.updatePost(post);
+        navigate(`/details/${id}`);
     }
 
     const handleChange = (e) => {
