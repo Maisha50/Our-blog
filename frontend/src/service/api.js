@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import { API_NOTIFICATION_MESSAGES, SERVICE_URLS } from '../constants/config';
-import { getAccessToken, getType } from '../utils/common-utils';
+import { getAccessToken, getRefreshToken, setAccessToken, getType } from '../utils/common-utils';
 
 const API_URL = 'http://localhost:8000';
 
@@ -16,7 +16,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
     function(config) {
         if (config.TYPE.params) {
-            config.params = config.TYPE.params;
+            config.params = config.TYPE.params
         } else if (config.TYPE.query) {
             config.url = config.url + '/' + config.TYPE.query;
         }
@@ -36,68 +36,56 @@ axiosInstance.interceptors.response.use(
         // Stop global loader here
         return Promise.reject(ProcessError(error));
     }
-);
+)
 
 ///////////////////////////////
 // If success -> returns { isSuccess: true, data: object }
 // If fail -> returns { isFailure: true, status: string, msg: string, code: int }
 //////////////////////////////
 const processResponse = (response) => {
-    if (response?.status === 200) {
+    if (response.status === 200 || response.status === 201) {
         return { isSuccess: true, data: response.data };
     } else {
         return {
             isFailure: true,
-            status: response?.status,
-            msg: response?.msg,
-            code: response?.code
+            status: response.status,
+            msg: response.data?.message || API_NOTIFICATION_MESSAGES.responseFailure,
+            code: response.status
         };
     }
-}
+};
 
-///////////////////////////////
-// If success -> returns { isSuccess: true, data: object }
-// If fail -> returns { isError: true, status: string, msg: string, code: int }
-//////////////////////////////
 const ProcessError = async (error) => {
     if (error.response) {
-        // Request made and server responded with a status code 
-        // that falls out of the range of 2xx
-        if (error.response?.status === 403) {
-            // Uncomment and handle token refresh if needed
-            // sessionStorage.clear();
-            // const requestData = error.toJSON();
-            // let response = await axios({
-            //     method: requestData.config.method,
-            //     url: requestData.config.baseURL + requestData.config.url,
-            //     headers: { "content-type": "application/json", "authorization": getAccessToken() },
-            //     params: requestData.config.params
-            // });
-            // return response;
-        } else {
-            console.log("ERROR IN RESPONSE: ", error.toJSON());
+        if (error.response.status === 401) {
+            // Unauthorized access handling (e.g., clear session)
+            sessionStorage.clear();
+            console.log("Unauthorized access detected. Session cleared.");
             return {
                 isError: true,
-                msg: API_NOTIFICATION_MESSAGES.responseFailure,
-                code: error.response.status
+                msg: "Unauthorized: Please log in again.",
+                code: 401
             };
+        } else if (error.response.status === 403) {
+            // Handle other specific status codes as needed
+            console.log("Forbidden: ", error.response.data?.message);
+        } else {
+            console.log("Error Response Status: ", error.response.status);
         }
-    } else if (error.request) { 
-        // The request was made but no response was received
+
         console.log("ERROR IN RESPONSE: ", error.toJSON());
         return {
             isError: true,
             msg: API_NOTIFICATION_MESSAGES.requestFailure,
             code: ""
         };
-    } else { 
-        // Something happened in setting up the request that triggered an Error
-        console.log("ERROR IN RESPONSE: ", error.toJSON());
+    } else {
+        console.log("ERROR: ", error.toJSON());
         return {
             isError: true,
             msg: API_NOTIFICATION_MESSAGES.networkError,
             code: ""
-        };
+        }
     }
 }
 
