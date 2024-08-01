@@ -1,7 +1,6 @@
-import React from 'react';
-import { Box, Typography, Link } from '@mui/material';
+
+import { Box, styled, Typography, Link } from '@mui/material';
 import { Instagram, Email } from '@mui/icons-material';
-import { styled } from '@mui/system';
 
 const Banner = styled(Box)`
     background-image: url(http://mrtaba.ir/image/bg2.jpg);
@@ -22,10 +21,26 @@ const Text = styled(Typography)`
     color: #878787;
 `;
 
+
 const Contact = () => {
     return (
-       <div>Contact page</div>
+        <Box>
+            <Banner />
+            <Wrapper>
+                <Typography variant="h3">Getting in touch is easy with BLOG NEST!</Typography>    
+                <Text variant="h5">
+                    Reach out to us on
+                    <Link href="https://www.instagram.com/_zinnnnnku_53?igsh=MWRjNW5uMWRvYXVrZg==" color="inherit" target="_blank">
+                        <Instagram/>
+                    </Link>
+                    or send me an Email 
+                    <Link href="mailto:adnanzihan14@gmail.com?Subject=This is a subject" target="_blank" color="inherit">
+                        <Email />
+                    </Link>.
+                </Text>
+            </Wrapper>
+        </Box>
     );
-};
+}
 
 export default Contact;
