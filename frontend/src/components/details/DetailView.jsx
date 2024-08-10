@@ -6,8 +6,9 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { API } from '../../service/api';
 import { DataContext } from '../../context/DataProvider';
 
-// components
+// Components
 import Comments from './comments/Comments';
+import Loader from '../loader/loader';
 
 const Container = styled(Box)(({ theme }) => ({
     margin: '50px 100px',
@@ -56,6 +57,7 @@ const DetailView = () => {
     const url = 'https://images.unsplash.com/photo-1543128639-4cb7e6eeef1b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFwdG9wJTIwc2V0dXB8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80';
     
     const [post, setPost] = useState({});
+    const [loading, setLoading] = useState(true); // Add loading state
     const { account } = useContext(DataContext);
 
     const navigate = useNavigate();
@@ -63,17 +65,24 @@ const DetailView = () => {
     
     useEffect(() => {
         const fetchData = async () => {
+            setLoading(true); // Set loading to true before fetching data
             let response = await API.getPostById(id);
             if (response.isSuccess) {
                 setPost(response.data);
             }
+            setLoading(false); // Set loading to false after fetching data
         }
         fetchData();
-    }, [id]); // Added id as a dependency
+    }, [id]);
 
+    // Define the deleteBlog function
     const deleteBlog = async () => {  
         await API.deletePost(post._id);
         navigate('/');
+    }
+
+    if (loading) {
+        return <Loader />; // Render the loader while data is being fetched
     }
 
     return (
@@ -84,7 +93,7 @@ const DetailView = () => {
                     account.username === post.username && 
                     <>  
                         <Link to={`/update/${post._id}`}><EditIcon color="primary" /></Link>
-                        <DeleteIcon onClick={() => deleteBlog()} color="error" />
+                        <DeleteIcon onClick={deleteBlog} color="error" /> {/* Call deleteBlog function */}
                     </>
                 }
             </Box>
