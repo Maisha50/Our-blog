@@ -1,14 +1,13 @@
 import axios from 'axios';
 
 import { API_NOTIFICATION_MESSAGES, SERVICE_URLS } from '../constants/config';
-import { getAccessToken, getRefreshToken, setAccessToken, getType } from '../utils/common-utils';
+import { getAccessToken, getRefreshToken, setAccessToken, setRefreshToken, getType } from '../utils/common-utils';
 
 const API_URL = 'http://localhost:8000';
-//const API_URL = 'https://backend-kappa-liart.vercel.app/';
 
 const axiosInstance = axios.create({
     baseURL: API_URL,
-    timeout: 10000, 
+    timeout: 10000,
     headers: {
         "content-type": "application/json"
     }
@@ -17,7 +16,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
     function(config) {
         if (config.TYPE.params) {
-            config.params = config.TYPE.params
+            config.params = config.TYPE.params;
         } else if (config.TYPE.query) {
             config.url = config.url + '/' + config.TYPE.query;
         }
@@ -33,47 +32,76 @@ axiosInstance.interceptors.response.use(
         // Stop global loader here
         return processResponse(response);
     },
-    function(error) {
+    async function(error) {
         // Stop global loader here
-        return Promise.reject(ProcessError(error));
+        return await ProcessError(error);
     }
-)
+);
 
 ///////////////////////////////
 // If success -> returns { isSuccess: true, data: object }
 // If fail -> returns { isFailure: true, status: string, msg: string, code: int }
 //////////////////////////////
 const processResponse = (response) => {
-    if (response.status === 200 || response.status === 201) {
+    if (response?.status === 200) {
         return { isSuccess: true, data: response.data };
     } else {
         return {
             isFailure: true,
-            status: response.status,
-            msg: response.data?.message || API_NOTIFICATION_MESSAGES.responseFailure,
-            code: response.status
+            status: response?.status,
+            msg: response?.msg,
+            code: response?.code
         };
     }
-};
+}
 
+///////////////////////////////
+// If success -> returns { isSuccess: true, data: object }
+// If fail -> returns { isError: true, status: string, msg: string, code: int }
+//////////////////////////////
 const ProcessError = async (error) => {
     if (error.response) {
-        if (error.response.status === 401) {
-            // Unauthorized access handling (e.g., clear session)
-            sessionStorage.clear();
-            console.log("Unauthorized access detected. Session cleared.");
+        if (error.response?.status === 403) {
+            try {
+                console.log('Refreshing token...');
+                const refreshToken = getRefreshToken();
+                if (!refreshToken) {
+                    console.log('No refresh token found.');
+                    sessionStorage.clear();
+                    return Promise.reject(error);
+                }
+
+                const refreshResponse = await axiosInstance.post('/refresh-token', { token: refreshToken });
+
+                if (refreshResponse.status === 200) {
+                    const { accessToken, refreshToken: newRefreshToken } = refreshResponse.data;
+                    setAccessToken(accessToken);
+                    setRefreshToken(newRefreshToken);
+
+                    // Retry the original request with the new access token
+                    const requestData = error.config;
+                    requestData.headers['authorization'] = `Bearer ${accessToken}`;
+                    console.log('Retrying request with new access token...');
+                    return axiosInstance(requestData);
+                } else {
+                    console.log('Refresh token response error:', refreshResponse);
+                    sessionStorage.clear();
+                    return Promise.reject(error);
+                }
+            } catch (refreshError) {
+                console.log('Error refreshing token:', refreshError);
+                sessionStorage.clear();
+                return Promise.reject(refreshError);
+            }
+        } else {
+            console.log("ERROR IN RESPONSE: ", error.toJSON());
             return {
                 isError: true,
-                msg: "Unauthorized: Please log in again.",
-                code: 401
+                msg: API_NOTIFICATION_MESSAGES.responseFailure,
+                code: error.response.status
             };
-        } else if (error.response.status === 403) {
-            // Handle other specific status codes as needed
-            console.log("Forbidden: ", error.response.data?.message);
-        } else {
-            console.log("Error Response Status: ", error.response.status);
         }
-
+    } else if (error.request) {
         console.log("ERROR IN RESPONSE: ", error.toJSON());
         return {
             isError: true,
@@ -81,12 +109,12 @@ const ProcessError = async (error) => {
             code: ""
         };
     } else {
-        console.log("ERROR: ", error.toJSON());
+        console.log("ERROR IN RESPONSE: ", error.toJSON());
         return {
             isError: true,
             msg: API_NOTIFICATION_MESSAGES.networkError,
             code: ""
-        }
+        };
     }
 }
 
