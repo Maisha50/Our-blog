@@ -1,8 +1,8 @@
-import cors from 'cors';
 import express from 'express';
-import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
-import { connectDB } from './database/db.js';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import { connectDB } from './database/db.js'; // Importing named export connectDB
 
 dotenv.config();
 
@@ -10,7 +10,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: "http://localhost:3000", // Allow requests from localhost:3000
+  origin: "https://bloggg-neon.vercel.app", // Replace with your actual frontend URL
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true
 }));
@@ -21,7 +21,11 @@ app.options('*', cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Your routes here
+// Root route
+app.get('/', (req, res) => {
+    res.send('Server is running');
+});
+
 import Router from './routes/route.js';
 app.use('/', Router);
 
@@ -37,5 +41,5 @@ connectDB(username, password)
   })
   .catch((err) => {
     console.error('Database connection error:', err.message);
-    process.exit(1);
+    process.exit(1); // Ensure to exit the process if the database connection fails
   });
