@@ -5,6 +5,7 @@ import { uploadImage, getImage } from '../controller/image-controller.js';
 import { newComment, getComments, deleteComment } from '../controller/comment-controller.js';
 import { loginUser, singupUser, logoutUser } from '../controller/user-controller.js';
 import { authenticateToken, createNewToken } from '../controller/jwt-controller.js';
+import { dashboard } from '../controller/dasboard-controller.js';
 
 import upload from '../utils/upload.js';
 
@@ -29,5 +30,5 @@ router.get('/file/:filename', getImage);
 router.post('/comment/new', authenticateToken, newComment);
 router.get('/comments/:id', authenticateToken, getComments);
 router.delete('/comment/delete/:id', authenticateToken, deleteComment);
-
+router.post('/dashboard', dashboard);
 export default router;

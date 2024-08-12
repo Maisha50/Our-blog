@@ -1,13 +1,21 @@
 import mongoose from 'mongoose';
 
 const CategorySchema = mongoose.Schema({
-    name: {
+    id: {
+        type: Number,
+    },
+    type: {
         type: String,
-        required: true
+        required: true,
+    },
+    number: {
+        type: Number,
+        required: true,
     }
 });
 
 
-const category = mongoose.model('category', CategorySchema);
+const category = mongoose.model('category', CategorySchema, 'category');
+
 
 export default category;
