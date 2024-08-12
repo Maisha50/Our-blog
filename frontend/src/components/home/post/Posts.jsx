@@ -3,24 +3,32 @@ import { Grid, Box } from '@mui/material';
 import { Link, useSearchParams } from 'react-router-dom';
 import { API } from '../../../service/api';
 
-//components
+// Components
 import Post from './Post';
+import Loader from '../../loader/loader';
 
 const Posts = () => {
     const [posts, getPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
     
     const [searchParams] = useSearchParams();
     const category = searchParams.get('category');
 
     useEffect(() => {
         const fetchData = async () => { 
+            setLoading(true); // Set loading to true before fetching
             let response = await API.getAllPosts({ category: category || '' });
             if (response.isSuccess) {
                 getPosts(response.data);
             }
+            setLoading(false); // Set loading to false after fetching
         }
         fetchData();
     }, [category]);
+
+    if (loading) {
+        return <Loader />; // Render loader while data is being fetched
+    }
 
     return (
         <Grid container spacing={3}>
