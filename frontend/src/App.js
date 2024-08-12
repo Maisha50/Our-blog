@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 
@@ -15,8 +15,7 @@ import Login from './components/account/Login';
 import Dashboard from './components/dashboard/Dashboard.jsx';
 
 const PrivateRoute = ({ isAuthenticated }) => {
-  const token = sessionStorage.getItem('accessToken');
-  return isAuthenticated && token ? (
+  return isAuthenticated ? (
     <>
       <Header />
       <Outlet />
@@ -29,13 +28,27 @@ const PrivateRoute = ({ isAuthenticated }) => {
 function App() {
   const [isAuthenticated, setIsUserAuthenticated] = useState(false);
 
+  useEffect(() => {
+    const token = sessionStorage.getItem('accessToken');
+    if (token) {
+      // Optionally verify token validity here
+      setIsUserAuthenticated(true);
+    } else {
+      setIsUserAuthenticated(false);
+    }
+  }, []);
+
   return (
     <DataProvider>
       <BrowserRouter>
         <Box style={{ marginTop: 64 }}>
           <Routes>
-            <Route path='/account' element={<Login isUserAuthenticated={setIsUserAuthenticated} />} />
-            
+            <Route
+              path='/account'
+              element={
+                isAuthenticated ? <Navigate replace to='/' /> : <Login isUserAuthenticated={setIsUserAuthenticated} />
+              }
+            />
             <Route element={<PrivateRoute isAuthenticated={isAuthenticated} />}>
               <Route path='/' element={<Home />} />
               <Route path='/create' element={<CreatePost />} />
@@ -43,7 +56,9 @@ function App() {
               <Route path='/update/:id' element={<Update />} />
               <Route path='/about' element={<About />} />
               <Route path='/contact' element={<Contact />} />
+
               <Route path='/dashboard' element={<Dashboard />} />
+
             </Route>
           </Routes>
         </Box>
