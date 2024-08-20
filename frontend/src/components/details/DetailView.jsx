@@ -77,14 +77,15 @@ const DetailView = () => {
 
     // Define the deleteBlog function
     const deleteBlog = async () => {  
-        await API.deletePost(post._id);
+       let response= await API.deletePost(post._id);
+       if (response.isSuccess){
         navigate('/');
+       }
     }
 
     if (loading) {
         return <Loader />; // Render the loader while data is being fetched
     }
-
     return (
         <Container>
             <Image src={post.picture || url} alt="post" />
@@ -93,7 +94,7 @@ const DetailView = () => {
                     account.username === post.username && 
                     <>  
                         <Link to={`/update/${post._id}`}><EditIcon color="primary" /></Link>
-                        <DeleteIcon onClick={deleteBlog} color="error" /> {/* Call deleteBlog function */}
+                        <DeleteIcon onClick={() => deleteBlog()} color="error" />
                     </>
                 }
             </Box>
@@ -109,7 +110,7 @@ const DetailView = () => {
             <Typography>{post.description}</Typography>
             <Comments post={post} />
         </Container>
-    );
+    )
 }
 
 export default DetailView;

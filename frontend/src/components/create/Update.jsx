@@ -52,10 +52,12 @@ const initialPost = {
 
 const Update = () => {
     const navigate = useNavigate();
-    const { id } = useParams();
 
     const [post, setPost] = useState(initialPost);
     const [file, setFile] = useState('');
+    const [imageURL, setImageURL] = useState('');
+
+    const { id } = useParams();
 
     const url = 'https://images.unsplash.com/photo-1543128639-4cb7e6eeef1b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFwdG9wJTIwc2V0dXB8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80';
     
@@ -67,23 +69,24 @@ const Update = () => {
             }
         }
         fetchData();
-    }, [id]); // Add id as dependency
+    }, []);
 
     useEffect(() => {
         const getImage = async () => { 
-            if (file) {
+            if(file) {
                 const data = new FormData();
                 data.append("name", file.name);
                 data.append("file", file);
                 
                 const response = await API.uploadFile(data);
                 if (response.isSuccess) {
-                    setPost(prevPost => ({ ...prevPost, picture: response.data }));
+                    post.picture = response.data;
+                    setImageURL(response.data);    
                 }
             }
         }
         getImage();
-    }, [file]);
+    }, [file])
 
     const updateBlogPost = async () => {
         await API.updatePost(post);
@@ -108,15 +111,15 @@ const Update = () => {
                     style={{ display: "none" }}
                     onChange={(e) => setFile(e.target.files[0])}
                 />
-                <InputTextField onChange={handleChange} value={post.title} name='title' placeholder="Title" />
-                <Button onClick={updateBlogPost} variant="contained" color="primary">Update</Button>
+                <InputTextField onChange={(e) => handleChange(e)} value={post.title} name='title' placeholder="Title" />
+                <Button onClick={() => updateBlogPost()} variant="contained" color="primary">Update</Button>
             </StyledFormControl>
 
             <StyledTextArea
                 rowsMin={5}
                 placeholder="Tell your story..."
                 name='description'
-                onChange={handleChange} 
+                onChange={(e) => handleChange(e)} 
                 value={post.description}
             />
         </Container>

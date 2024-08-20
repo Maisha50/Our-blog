@@ -32,12 +32,10 @@ const Header = () => {
                 <Link to='/'>HOME</Link>
                 <Link to='/about'>ABOUT</Link>
                 <Link to='/contact'>CONTACT</Link>
+                <Link to='/dashboard'>DASHBOARD</Link>
 
+                {/* Logout button */}
                 <a href="/account" onClick={handleLogout}>LOGOUT</a>
-
-                <Link to="/dashboard">DASHBOARD</Link>
-                <Link to='/account'>LOGOUT</Link>
-
             </Container>
         </Component>
     );
