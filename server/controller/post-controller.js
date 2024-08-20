@@ -28,18 +28,22 @@ export const updatePost = async (request, response) => {
         response.status(500).json(error);
     }
 }
-
 export const deletePost = async (request, response) => {
     try {
         const post = await Post.findById(request.params.id);
-        
-        await post.delete()
+        if (!post) {
+            return response.status(404).json({ msg: 'Post not found' });
+        }
 
-        response.status(200).json('post deleted successfully');
+        // Use findByIdAndDelete to remove the post
+        await Post.findByIdAndDelete(post._id);
+
+        return response.status(200).json({ msg: 'Post deleted successfully' });
     } catch (error) {
-        response.status(500).json(error)
+        return response.status(500).json({ error: error.message });
     }
-}
+};
+
 
 export const getPost = async (request, response) => {
     try {
