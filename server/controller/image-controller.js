@@ -7,11 +7,13 @@ const url = 'http://localhost:8000';
 let gfs, gridfsBucket;
 const conn = mongoose.connection;
 conn.once('open', () => {
+    console.log('MongoDB connection open.');
     gridfsBucket = new mongoose.mongo.GridFSBucket(conn.db, {
         bucketName: 'fs'
     });
     gfs = grid(conn.db, mongoose.mongo);
     gfs.collection('fs');
+    console.log('GridFS initialized.');
 });
 
 
@@ -21,7 +23,7 @@ export const uploadImage = (request, response) => {
     
     const imageUrl = `${url}/file/${request.file.filename}`;
 
-    response.status(200).json(imageUrl);    
+    return response.status(200).json(imageUrl);    
 }
 
 export const getImage = async (request, response) => {
