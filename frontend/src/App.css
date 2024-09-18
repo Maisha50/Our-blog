@@ -106,3 +106,64 @@ footer {
   text-align: center;
   width: 100%;
 }
+.icon1{
+  height: auto;
+  width: 300px;
+  cursor: pointer;
+}
+
+
+.SearchBar{
+  width: 100%;
+
+  box-sizing: border-box;
+  padding: 20px;
+
+}
+
+.search{
+  padding: 12px;
+  border-radius: 15px;
+  border: 1px solid black;
+  width: 100%;
+  margin-right: 20px;
+  box-sizing: border-box;
+
+}
+
+.profile-container {
+  max-width: 600px;
+  margin: auto;
+  margin-top: 200px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+}
+
+.profile-header {
+  font-size: 2em;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.profile-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-info {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.profile-label {
+  font-weight: bold;
+  margin-right: 10px;
+  color: #555;
+}
+
+.profile-value {
+  font-size: 1.1em;
+  color: #333;
+}
