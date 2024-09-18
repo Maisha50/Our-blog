@@ -24,7 +24,7 @@ const isAuthenticated = async () => {
     if (!token || !decodedToken || decodedToken.exp < currentTime) {
       try {
         const response = await axios.post(
-          `http://localhost:8000/refresh-token`,
+          `https://backend-kappa-liart.vercel.app/refresh-token`,
           { refreshToken }
         );
 
