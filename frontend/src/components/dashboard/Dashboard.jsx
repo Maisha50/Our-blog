@@ -21,7 +21,7 @@ function Dashboard() {
 
   const fetchdata = async () => {
     try {
-      const response = await axios.post("http://localhost:8000/dashboard");
+      const response = await axios.post("https://backend-kappa-liart.vercel.app/dashboard");
       console.log(response.data.category);
       setCategory(response.data.category);
     } catch (error) {
