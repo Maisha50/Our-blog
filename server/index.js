@@ -28,7 +28,9 @@ app.use('/', Router);
 const PORT = process.env.PORT || 8000;
 const username = process.env.DB_USERNAME;
 const password = process.env.DB_PASSWORD;
-
+app.get('/', (req, res) => {
+  res.send("Backend server is running")
+})
 connectDB(username, password)
   .then(() => {
     app.listen(PORT, () => {

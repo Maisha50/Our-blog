@@ -71,7 +71,7 @@ const signupInitialValues = {
     password: ''
 };
 
-const Login = ({ isUserAuthenticated }) => {
+const Login = () => {
     const [login, setLogin] = useState(loginInitialValues);
     const [signup, setSignup] = useState(signupInitialValues);
     const [error, showError] = useState('');
@@ -99,13 +99,16 @@ const Login = ({ isUserAuthenticated }) => {
             let response = await API.userLogin(login);
             if (response.isSuccess) {
                 showError('');
+                localStorage.setItem("accessToken",response.data.accessToken);
+                localStorage.setItem("refreshToken", response.data.refreshToken);
+                localStorage.setItem("userId", response.data.userId);
 
                 sessionStorage.setItem('accessToken', `Bearer ${response.data.accessToken}`);
                 sessionStorage.setItem('refreshToken', `Bearer ${response.data.refreshToken}`);
 
                 setAccount({ name: response.data.name, username: response.data.username });
 
-                isUserAuthenticated(true); // Call as a function
+                
                 setLogin(loginInitialValues);
                 navigate('/');
             } else {
@@ -149,7 +152,7 @@ const Login = ({ isUserAuthenticated }) => {
                             value={login.username}
                             onChange={(e) => onValueChange(e)}
                             name="username"
-                            label="Enter Username"
+                            label="Enter Username or Email"
                         />
                         <TextField
                             variant="standard"
@@ -177,7 +180,7 @@ const Login = ({ isUserAuthenticated }) => {
                             value={signup.name}
                             onChange={(e) => onInputChange(e)}
                             name="name"
-                            label="Enter Name"
+                            label="Enter Email"
                         />
                         <TextField
                             variant="standard"
