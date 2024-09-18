@@ -32,7 +32,7 @@ const Header = () => {
         <Component>
       <Container>
         <Link to="/">
-          <img src="Icon.png" className="icon1" alt="Blog Nest" />
+          <img src="/Icon.png" className="icon1" alt="Blog Nest" />
         </Link>
         <Link to="/">HOME</Link>
         <Link to="/profile">PROFILE</Link>
