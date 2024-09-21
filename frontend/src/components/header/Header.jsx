@@ -34,7 +34,9 @@ const Header = () => {
         <Component>
       <Container>
         <Link to="/">
+
           <img src="cover.png" className="icon1" alt="Blog Nest" />
+
         </Link>
         <Link to="/">HOME</Link>
         <Link to="/profile">PROFILE</Link>

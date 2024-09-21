@@ -6,7 +6,7 @@ const Profile = () => {
 
   const fetchProfile = async () => {
     try {
-      const response = await axios.post("http://localhost:8000/profile", {
+      const response = await axios.post("https://backend-kappa-liart.vercel.app/profile", {
         userId,
       });
       setProfileInfo(response.data.user);
