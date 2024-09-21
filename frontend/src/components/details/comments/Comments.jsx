@@ -40,6 +40,7 @@ const Comments = ({ post }) => {
     const [toggle, setToggle] = useState(false);
 
     const { account } = useContext(DataContext);
+    const name=localStorage.getItem("userName")
 
     useEffect(() => {
         const getData = async () => {
@@ -54,7 +55,7 @@ const Comments = ({ post }) => {
     const handleChange = (e) => {
         setComment({
             ...comment,
-            name: account.username,
+            name:name,
             postId: post._id,
             comments: e.target.value
         });
