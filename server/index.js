@@ -10,7 +10,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: "https://bloggg-neon.vercel.app", // Allow requests from localhost:3000
+  origin: true, // Allow requests from localhost:3000
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true
 }));
