@@ -3,17 +3,19 @@ import { Link, useNavigate } from 'react-router-dom';
 import "../../App.css"
 
 const Component = styled(AppBar)`
-    background: #FFFFFF;
-    color: black;
+  background: #1e406b;
+  color: black;
 `;
 
 const Container = styled(Toolbar)`
-    justify-content: center;
-    & > a {
-        padding: 20px;
-        color: #000;
-        text-decoration: none;
-    }
+  justify-content: center;
+  & > a {
+    padding: 20px;
+    color: #fff;
+    text-decoration: none;
+    // font-weight: bold;
+    font-size: 20px;
+  }
 `;
 
 const Header = () => {
@@ -32,7 +34,9 @@ const Header = () => {
         <Component>
       <Container>
         <Link to="/">
-          <img src="icon.png" className="icon1" alt="Blog Nest" />
+
+          <img src="cover.png" className="icon1" alt="Blog Nest" />
+
         </Link>
         <Link to="/">HOME</Link>
         <Link to="/profile">PROFILE</Link>

@@ -2,7 +2,8 @@
 import { styled, Box, Typography } from '@mui/material';
 
 const Container = styled(Box)`
-    border: 1px solid #d3cede;
+    background-color: #e0ecff;
+    border: 1px solid #000;
     border-radius: 10px;
     margin: 10px;
     display: flex;
