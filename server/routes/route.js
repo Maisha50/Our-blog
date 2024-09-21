@@ -19,7 +19,7 @@ router.post('/profile', Profile);
 
 router.post('/token', createNewToken);
 
-router.post('/create', authenticateToken, createPost);
+router.post('/create', createPost);
 router.put('/update/:id', authenticateToken, updatePost);
 router.delete('/delete/:id', authenticateToken, deletePost);
 
