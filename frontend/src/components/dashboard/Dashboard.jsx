@@ -33,7 +33,9 @@ function Dashboard() {
   }, []);
 
   return (
-    <div>
+
+    <div style={{marginTop:"110px"}}>
+
       <div className="chart-wrapper">
         <ResponsiveContainer width="100%" height={400}>
           <BarChart
