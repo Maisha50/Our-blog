@@ -59,7 +59,8 @@ const CreatePost = () => {
     const { account } = useContext(DataContext);
 
     const url = post.picture ? post.picture : 'https://images.unsplash.com/photo-1543128639-4cb7e6eeef1b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bGFwdG9wJTIwc2V0dXB8ZW58MHx8MHx8&ixlib=rb-1.2.1&w=1000&q=80';
-    
+    const name= localStorage.getItem("userName")
+
     useEffect(() => {
         const getImage = async () => { 
             if(file) {
@@ -75,9 +76,9 @@ const CreatePost = () => {
         setPost(prevPost => ({
             ...prevPost,
             categories: location.search?.split('=')[1] || 'All',
-            username: account.username
+            username: name
         }));
-    }, [file, location.search, account.username]);
+    }, [file, location.search]);
 
     const savePost = async () => {
         await API.createPost(post);

@@ -62,7 +62,8 @@ const DetailView = () => {
 
     const navigate = useNavigate();
     const { id } = useParams();
-    
+    const name=localStorage.getItem("userName")
+
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true); // Set loading to true before fetching data
@@ -91,7 +92,7 @@ const DetailView = () => {
             <Image src={post.picture || url} alt="post" />
             <Box style={{ float: 'right' }}>
                 {   
-                    account.username === post.username && 
+                    name === post.username && 
                     <>  
                         <Link to={`/update/${post._id}`}><EditIcon color="primary" /></Link>
                         <DeleteIcon onClick={() => deleteBlog()} color="error" />

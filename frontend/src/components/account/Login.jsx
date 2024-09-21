@@ -102,6 +102,9 @@ const Login = () => {
                 localStorage.setItem("accessToken",response.data.accessToken);
                 localStorage.setItem("refreshToken", response.data.refreshToken);
                 localStorage.setItem("userId", response.data.userId);
+                localStorage.setItem("userName", response.data.username);
+                
+
 
                 sessionStorage.setItem('accessToken', `Bearer ${response.data.accessToken}`);
                 sessionStorage.setItem('refreshToken', `Bearer ${response.data.refreshToken}`);
