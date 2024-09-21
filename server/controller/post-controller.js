@@ -1,10 +1,16 @@
 
 import Post from '../model/post.js';
-
+import Category from '../model/category.js';
 
 export const createPost = async (request, response) => {
     try {
         const post = await new Post(request.body);
+        const category = await Category.findOne({ type: request.body.categories });
+
+        if (category) {
+            category.number++;
+            await category.save(); // Save the updated category
+        }
         post.save();
 
         response.status(200).json('Post saved successfully');
