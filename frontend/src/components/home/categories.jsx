@@ -18,14 +18,14 @@ const StyledLink = styled(Link)`
     text-decoration: none;
     color: inherit;
 `;
+
 const StyledTableCell = styled(TableCell)`
-  background-color: #dbeaff;
+  background-color: #e0ecff;
   color: #1e406b;
   border-bottom: 1px solid #000;
   font-weight: bold;
   font-size: 18px; /* Adjust this value to make the text bigger */
 `;
-
 
 const Categories = () => {
     const [searchParams] = useSearchParams();
@@ -40,21 +40,21 @@ const Categories = () => {
             <StyledTable>
                 <TableHead>
                     <TableRow>
-                        <TableCell>
+                        <StyledTableCell>
                             <StyledLink to={"/"}>
                                 All Categories
                             </StyledLink>
-                        </TableCell>
+                        </StyledTableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {categories.map((category) => (
                         <TableRow key={category.id}>
-                            <TableCell>
+                            <StyledTableCell>
                                 <StyledLink to={`/?category=${category.type}`}>
                                     {category.type}
                                 </StyledLink>
-                            </TableCell>
+                            </StyledTableCell>
                         </TableRow>
                     ))}
                 </TableBody>
